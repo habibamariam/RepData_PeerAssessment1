@@ -8,18 +8,81 @@ output:
 
 ## Loading and preprocessing the data
 
+setwd("D:/Coursera data Science/Reproducable Research/week 2assignment/repdata%2Fdata%2Factivity")
+library(dplyr)
+activity<-read.csv("./activity.csv")
+str(activity)
+head(activity)
+summary(activity)
 
 
 ## What is mean total number of steps taken per day?
-
+##creating a version without missing values
+activity.complete<-na.omit(activity)
+activity.day<-group_by(activity.complete,date)
+activity.day<-summarise(activity.day,steps=sum(steps))
+summary(activity.day)
+library(ggplot2)
+qplot(steps,data = activity.day)
 
 
 ## What is the average daily activity pattern?
-
-
+ mean(activity.day$steps)
+[1] 10766.19
+> median(activity.day$steps)
+[1] 10765
+activity.interval<-group_by(activity.complete,interval)
+activity.interval<-summarise(activity.interval,steps=mean(steps)
+summary(activity.interval)
+interval          steps        
+ Min.   :   0.0   Min.   :  0.000  
+ 1st Qu.: 588.8   1st Qu.:  2.486  
+ Median :1177.5   Median : 34.113  
+ Mean   :1177.5   Mean   : 37.383  
+ 3rd Qu.:1766.2   3rd Qu.: 52.835  
+ Max.   :2355.0   Max.   :206.170
+ggplot(activity.interval,aes(interval,steps))+geom_line()
+activity.interval[activity.interval$steps==max(activity.interval$steps),]
+A tibble: 1 x 2
+  interval    steps
+     <int>    <dbl>
+1      835 206.1698
 
 ## Imputing missing values
+nrow(activity)-nrow(activity.complete)
+[1] 2304
+names(activity.interval)[2]<-"mean.steps"
+activity.impute<-merge(activity,activity.interval)
+activity.impute$steps[is.na(activity.impute$steps)]<-activity.impute$mean.steps[is.na(activity.impute$steps)]
+activity.day.impute<-group_by(activity.impute,date)
+activity.day.impute<-summarise(activity.day.impute,steps=sum(steps))
+qplot(steps,data = activity.day.impute)
+mean(activity.day.impute$steps)
+median(activity.day.impute$steps)
+ mean(activity.day.impute$steps)
+[1] 10766.19
 
-
+median(activity.day.impute$steps)
+[1] 10766.19
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+activity.impute$daysofweek<-weekdays(as.Date(activity.impute$date))
+activity.impute$weekend<-as.factor(activity.impute$daysofweek=="Saturday"|activity.impute$daysofweek=="Sunday")
+levels(activity.impute$weekend)<-c("Weekdays","Weekend")
+
+activity.weekday<-activity.impute[activity.impute$weekend=="Weekdays",]
+activity.weekend<-activity.impute[activity.impute$weekend=="Weekend",]
+
+activity.interval.weekday<-group_by(activity.weekday,interval)
+summarise(activity.interval.weekday,steps=mean(steps))
+activity.interval.weekday$weekday<-"Weekday"
+activity.interval.weekend<-group_by(activity.weekend,interval)
+summarise(activity.interval.weekend,steps=mean(steps))
+activity.interval.weekend$weekend<-"Weekend"
+
+
+activity.interval<-rbind(activity.interval.weekday,activity.interval.weekend)
+activity.interval$weekend<-as.factor(activity.interval$weekend)
+ggplot(activity.interval,aes(interval,steps))+geom_line()+facet_grid(weekday~.)
