@@ -145,14 +145,6 @@ Warning messages:
 > activity.interval$weekend<-as.factor(activity.interval$weekend)
 > ggplot(activity.interval,aes(interval,steps))+geom_line()+facet_grid(weekend~.)
 > ggplot(activity.interval,aes(interval,steps))+geom_line()+facet_grid(weekday~.)
-> 
-  
-
-
-
-
-
-
 
 
 
