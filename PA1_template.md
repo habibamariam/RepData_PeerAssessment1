@@ -78,7 +78,10 @@ Calculate the total number of steps taken per day
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](assignment_1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+(assignment_1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
+(assignment_1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
 \#\#\#Calculate and report the mean and median of the total number of
 steps taken per day
 
