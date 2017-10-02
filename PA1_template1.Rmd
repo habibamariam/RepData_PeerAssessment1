@@ -37,7 +37,7 @@ output: setwd("D:/Coursera data Science/Reproducable Research/week 2assignment/r
 > activity.day<-group_by(activity.complete,date)
 > activity.day<-summarise(activity.day,steps=sum(steps))
 > summary(activity.day)
-         date        steps      
+         date        steps       
  2012-10-02: 1   Min.   :   41  
  2012-10-03: 1   1st Qu.: 8841  
  2012-10-04: 1   Median :10765  
